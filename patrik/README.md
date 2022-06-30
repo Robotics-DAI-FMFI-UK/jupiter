@@ -1,6 +1,6 @@
 # Kontrolovanie robota jupiter cez obrazovku
 
-## o kóde 
+## o projekte
 Program je napísaný  v python jazyku a je tam naprogramovaná komunikácia medzi modulmi v rámci systému ROS.(Robot Orientating System má k dispozícii všetky základné prvky, ktoré pri tvorbe robotických aplikácii potrebujete, od ovládačov pre rôzne typy senzorov a hardwaru)
 V kóde je naprogramovaný pohyb robotického ramena a pohyb robota. Je pritom použitý senzor 360 stupňový lidar (Lidar je rotujúci senzor ktorý vysiela infračervený luč a zachytáva jeho odraz. Slúži na zistenie vzdialenosti) a je ovládateľný dotykovou obrazovkou.
 
