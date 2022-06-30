@@ -1,8 +1,8 @@
 # Kontrolovanie robota jupiter cez obrazovku
 
 ## o kóde 
-Program je napísaný  v python jazyku a je tam naprogramovaná komunikácia medzi modulmi v rámci systému ros.
-V kóde je naprogramovaný pohyb robotického ramena a pohyb robota. Je pritom použitý senzor lidar a je ovládateľný dotykovou obrazovkou.
+Program je napísaný  v python jazyku a je tam naprogramovaná komunikácia medzi modulmi v rámci systému ROS.(Robot Orientating System má k dispozícii všetky základné prvky, ktoré pri tvorbe robotických aplikácii potrebujete, od ovládačov pre rôzne typy senzorov a hardwaru)
+V kóde je naprogramovaný pohyb robotického ramena a pohyb robota. Je pritom použitý senzor 360 stupňový lidar (Lidar je rotujúci senzor ktorý vysiela infračervený luč a zachytáva jeho odraz. Slúži na zistenie vzdialenosti) a je ovládateľný dotykovou obrazovkou.
 
 ## Ako nainštalovať package
 presuňte patrik_shovcase subor do catkin_ws/src priečinka.
@@ -31,14 +31,7 @@ Tlačidlo stop zastaví robota na mieste. Tlačidlo „follow the wall“  spust
 
 [link na video](https://www.youtube.com/watch?v=hhut5zByEuA)
 
-<!---
-![jupiter](https://user-images.githubusercontent.com/33252560/176630987-dfa01345-dddb-493c-86fa-2aa726ef8cd9.jpg)
 
-![napajanie](https://user-images.githubusercontent.com/33252560/176631225-c3bc9f43-f69f-48af-ac9b-58d00f1a71bc.jpg)
-![napajanie_ramena](https://user-images.githubusercontent.com/33252560/176631236-86f6b43f-70ce-417b-8038-f0ffe9a2e0ea.jpg)
-![pocitac](https://user-images.githubusercontent.com/33252560/176631252-8e9b3df5-c819-44a2-8a04-b211a2a93060.jpg)
-
---->
 
 
 This folder contains application for demonstration of Jupiter capabilities.
