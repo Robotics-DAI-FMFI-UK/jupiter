@@ -55,7 +55,7 @@ class DetectObstacles:
             angle += 45
         self.checkDistances()
 
-        def checkDistances(self):
+    def checkDistances(self):
         directions = ['Front', 'FrontRight', 'Right', 'BackRight',
                     'Back', 'BackLeft', 'Left', 'FrontLeft']
 
