@@ -20,8 +20,9 @@ class DetectObstacles:
         # init publishera ktory dava custom message
         self.pub = rospy.Publisher('freePaths', DetectedObstacles)
 
-        self.rate = rospy.Rate(5)
+        self.rate = rospy.Rate(10)
         self.detectionRange = 0.8
+        self.robotPartsRange = 0.16
 
         # directionRanges = [front, frontRight, right, backRight, back, backLeft, left, frontLeft]
         self.directionRanges = [[] for _ in range(8)]
@@ -39,7 +40,8 @@ class DetectObstacles:
             # volam publishovanie custom messagu
             self.publishPathsMessage()
             print(self.possiblePaths())
-            rospy.sleep(0)
+            # print(self.directionRanges[0])
+            self.rate.sleep()
     
     def shutdown(self):
         
@@ -48,10 +50,10 @@ class DetectObstacles:
 
     def callback(self, msg):
 
-        self.directionRanges[0] = msg.ranges[337:359] + msg.ranges[0:21]
+        self.directionRanges[0] = msg.ranges[339:359] + msg.ranges[0:19]
         angle = 45
         for i in range(len(self.directionRanges) - 1):
-            self.directionRanges[i+1] = msg.ranges[angle - 22 : angle + 22]
+            self.directionRanges[i+1] = msg.ranges[angle - 20 : angle + 20]
             angle += 45
         self.checkDistances()
 
@@ -61,11 +63,14 @@ class DetectObstacles:
 
         for index, direction in enumerate(directions):
             obstacle = False
+            warning = False
             for i in self.directionRanges[index]:
                 if not isinf(i):
-                    if i <= self.detectionRange:
-                        obstacle = True
-                        break
+                    if self.robotPartsRange < i <= self.detectionRange:
+                        warning = True
+                        if warning:
+                            obstacle = True
+                            break
             self.directionObstacles[direction] = obstacle
 
     def possiblePaths(self):
@@ -75,7 +80,7 @@ class DetectObstacles:
     #publishujem svoj custom message
     def publishPathsMessage(self):
 
-        msg = DetectedObstacles
+        msg = DetectedObstacles()
         msg.front = 1 if self.directionObstacles["Front"] else 0
         msg.frontRight = 1 if self.directionObstacles["FrontRight"] else 0
         msg.right = 1 if self.directionObstacles["Right"] else 0

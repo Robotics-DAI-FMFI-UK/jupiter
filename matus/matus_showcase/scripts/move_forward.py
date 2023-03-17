@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import rospy
-# import detect_obstacles
 from geometry_msgs.msg import Twist
+from matus_showcase.msg import DetectedObstacles
 
 class MoveAround():
 
@@ -12,7 +12,6 @@ class MoveAround():
         self.cmd_vel = rospy.Publisher('/cmd_vel_mux/input/navi', Twist, queue_size=10)
         self.move = Twist()
         self.freePathsListener = rospy.Subscriber('freePaths', DetectedObstacles, self.freePathCallback)
-        rate = rospy.Rate(2)
 
         self.directionObstacles = {
             "Front" : False,
@@ -26,22 +25,29 @@ class MoveAround():
         }
 
         while not rospy.is_shutdown():
-            if obstacleInFront:
+
+            if not self.obstacleInFront():
                 self.moveForward()
             else:
                 self.choosePath()
-            # self.turnLeft()
+                rospy.sleep(1)
             rospy.sleep(0)
     
     def obstacleInFront(self):
-        
-        return not self.directionObstacles['Front']
+        # print("VPREDU> ", self.directionObstacles['Front'])
+        print(self.directionObstacles)
+        return self.directionObstacles['Front']
     
     def shutdown(self):
 
         rospy.loginfo("Stop Jupyter")
         self.cmd_vel.publish(Twist())
         rospy.sleep(1)
+
+    def stopMoving(self):
+        self.move.linear.x = 0
+        self.move.linear.z = 0
+        self.cmd_vel.publish(self.move)
 
     def moveForward(self):
 
@@ -57,14 +63,14 @@ class MoveAround():
 
     def turnLeft(self):
 
-        self.move.linear.x = 0.8
-        self.move.angular.z = 1
+        self.move.linear.x = 0
+        self.move.angular.z = 0.5
         self.cmd_vel.publish(self.move)
 
     def turnRight(self):
 
-        self.move.linear.x = 0.8
-        self.move.angular.z = -1
+        self.move.linear.x = 0
+        self.move.angular.z = -0.5
         self.cmd_vel.publish(self.move)
 
     def freePathCallback(self, data):
@@ -82,12 +88,16 @@ class MoveAround():
 
         if self.directionObstacles['FrontLeft']:
             self.turnRight()
+            return
         elif self.directionObstacles['FrontRight']:
             self.turnLeft()
+            return
         elif self.directionObstacles['Left']:
             self.turnRight()
+            return
         elif self.directionObstacles['Right']:
             self.turnLeft()
+            return
 
 if __name__ == '__main__':
     MoveAround()
