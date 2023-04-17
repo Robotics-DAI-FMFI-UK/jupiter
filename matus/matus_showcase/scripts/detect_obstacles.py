@@ -18,10 +18,10 @@ class DetectObstacles:
         self.sub = rospy.Subscriber('/scan', LaserScan, self.callback)
         
         # init publishera ktory dava custom message
-        self.pub = rospy.Publisher('freePaths', DetectedObstacles)
+        self.pub = rospy.Publisher('freePaths', DetectedObstacles, queue_size=10)
 
         self.rate = rospy.Rate(10)
-        self.detectionRange = 0.8
+        self.detectionRange = 0.5
         self.robotPartsRange = 0.16
 
         # directionRanges = [front, frontRight, right, backRight, back, backLeft, left, frontLeft]
@@ -39,7 +39,6 @@ class DetectObstacles:
         while not rospy.is_shutdown():
             # volam publishovanie custom messagu
             self.publishPathsMessage()
-            print(self.possiblePaths())
             # print(self.directionRanges[0])
             self.rate.sleep()
     

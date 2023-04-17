@@ -165,6 +165,8 @@ include_directories(
 catkin_install_python(PROGRAMS
   scripts/detect_obstacles.py
   scripts/move_forward.py
+  scripts/opencv_convert.py
+  scripts/speech_recognizer.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

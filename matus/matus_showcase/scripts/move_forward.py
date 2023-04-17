@@ -27,15 +27,17 @@ class MoveAround():
         while not rospy.is_shutdown():
 
             if not self.obstacleInFront():
+                print('freeee')
                 self.moveForward()
             else:
-                self.choosePath()
-                rospy.sleep(1)
+                print('noooooope')
+                self.stopMoving()
+                # self.choosePath()
+                # rospy.sleep(1)
             rospy.sleep(0)
     
     def obstacleInFront(self):
         # print("VPREDU> ", self.directionObstacles['Front'])
-        print(self.directionObstacles)
         return self.directionObstacles['Front']
     
     def shutdown(self):
