@@ -8,6 +8,7 @@ from random import randint
 imgcounter = 1
 basename = "image%s.png"
 
+#mustar
 HOST = '192.168.8.2'
 PORT = 22
 

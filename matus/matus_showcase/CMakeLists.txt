@@ -167,6 +167,7 @@ catkin_install_python(PROGRAMS
   scripts/move_forward.py
   scripts/opencv_convert.py
   scripts/speech_recognizer.py
+  scripts/take_picture.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
