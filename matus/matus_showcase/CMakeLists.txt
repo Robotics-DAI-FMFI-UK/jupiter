@@ -52,6 +52,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   DetectedObstacles.msg
+  ClothesMessage.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -168,6 +169,8 @@ catkin_install_python(PROGRAMS
   scripts/opencv_convert.py
   scripts/speech_recognizer.py
   scripts/take_picture.py
+  scripts/talk_back.py
+  scripts/clothing_publisher.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 

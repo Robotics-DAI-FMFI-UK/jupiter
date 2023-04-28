@@ -16,13 +16,15 @@ class TakePicture:
         self.bridge = CvBridge()
         self.image_recieved = False
         image_topic = "/camera_top/rgb/image_raw"
+        image_topic = "/camera/rgb/image_raw"
         self.image_subscriber = rospy.Subscriber(image_topic, Image, self.callback)
+        self.img_path = "../images/photo.png"
         rospy.sleep(1)
 
     def callback(self, data):
         try:
             cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
-            cv_image = self.resize_image(cv_image)
+            # cv_image = self.resize_image(cv_image)
         except CvBridgeError as e:
             print(e)
 
@@ -41,25 +43,27 @@ class TakePicture:
         new_image = cv2.resize(image, dimensions, interpolation=cv2.INTER_LINEAR)
         return new_image
     
-    def take_picture(self, img_title):
+    def save_picture(self, img_path):
         if self.image_recieved:
-            path = "src/matus_showcase/images"
-            cv2.imwrite(os.path.join(path, img_title), self.image)
+            cv2.imwrite(self.img_path, self.image)
             # cv2.imwrite(img_title, self.image)
             return True
         return False
 
-if __name__ == '__main__':
+    def main(self):
+        rospy.init_node('take_photo', anonymous=False)
+        camera = TakePicture()
 
-    rospy.init_node('take_photo', anonymous=False)
+
+        if camera.save_picture(self.img_path):
+            rospy.loginfo("Image saved to " + self.img_path)
+        else:
+            rospy.loginfo("No image recieved")
+
+        rospy.sleep(1)
+
+try:
     camera = TakePicture()
-
-    timestamp = time.strftime("%Y%m%d-%H%M%S-")
-    img_title = timestamp + "photo.png"
-
-    if camera.take_picture(img_title):
-        rospy.loginfo("Image " + img_title + " to /images")
-    else:
-        rospy.loginfo("No image recieved")
-
-    rospy.sleep(1)
+    camera.main()
+except Exception as e:
+        print(e)

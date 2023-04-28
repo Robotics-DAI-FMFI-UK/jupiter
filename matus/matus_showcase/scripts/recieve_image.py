@@ -1,71 +1,46 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
+import socket
+import os
 
-import random
-import socket, select
-from time import gmtime, strftime
-from random import randint
 
-imgcounter = 1
-basename = "image%s.png"
+class ImageReceiver:
+    def __init__(self):
+        self.IP_ADDRESS = '192.168.8.2'
+        self.PORT = 7777
+        self.save_path = 'to/received.png'
 
-#mustar
-HOST = '192.168.8.2'
-PORT = 22
+    def receive_image(self):
+        # Create a TCP/IP socket
+        with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+            # Bind socket to IP address and port number
+            sock.bind((self.IP_ADDRESS, self.PORT))
+            sock.listen(1)
 
-connected_clients_sockets = []
+            while True:
+                # Wait for a connection
+                print("Waiting for connection>")
+                conn, addr = sock.accept()
+                print('Connected by', addr)
 
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                # Receive the size of the image data as a 4-byte integer
+                size_bytes = conn.recv(4)
+                size = int.from_bytes(size_bytes, byteorder='big')
 
-server_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-server_socket.bind((HOST, PORT))
-server_socket.listen(10)
-
-connected_clients_sockets.append(server_socket)
-
-while True:
-
-    read_sockets, write_sockets, error_sockets = select.select(connected_clients_sockets, [], [])
-
-    for sock in read_sockets:
-
-        if sock == server_socket:
-
-            sockfd, client_address = server_socket.accept()
-            connected_clients_sockets.append(sockfd)
-
-        else:
-            try:
-
-                data = sock.recv(4096)
-                txt = str(data)
-
-                if txt.startswith('SIZE'):
-                    tmp = txt.split()
-                    size = int(tmp[1])
-
-                    print('got size')
-
-                    sock.send("GOT SIZE")
-
-                elif txt.startswith('BYE'):
-                    sock.shutdown()
-
-                elif data:
-
-                    myfile = open(basename % imgcounter, 'wb')
-
-                    data = sock.recv(40960000)
-                    if not data:
-                        myfile.close()
+                # Receive the image data
+                data = b''
+                while len(data) < size:
+                    packet = conn.recv(size - len(data))
+                    if not packet:
                         break
-                    myfile.write(data)
-                    myfile.close()
+                    data += packet
 
-                    sock.send("GOT IMAGE")
-                    sock.shutdown()
-            except:
-                sock.close()
-                connected_clients_sockets.remove(sock)
-                continue
-        imgcounter += 1
-server_socket.close()
+                # Save the image data to a file
+                with open(self.save_path, 'wb') as f:
+                    f.write(data)
+
+                # Close the connection
+                conn.close()
+
+if __name__ == '__main__':
+    reciever = ImageReceiver()
+    reciever.receive_image()
