@@ -29,5 +29,7 @@ class Talker:
             return "This person is wearing glasses."
         if text == 'cap':
             return "Really nice cap, forreal, forreal, no cap."
-        return "Nice red T-shirt. You know what color to wear to battle."
+        if text == 'red_t_shirt':
+            return "Nice red T-shirt. You know what color to wear to battle."
+        return text
 

@@ -171,6 +171,7 @@ catkin_install_python(PROGRAMS
   scripts/take_picture.py
   scripts/talk_back.py
   scripts/clothing_publisher.py
+  scripts/voice_command_listener.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
 
