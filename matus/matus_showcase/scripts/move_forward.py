@@ -27,13 +27,11 @@ class MoveAround():
         while not rospy.is_shutdown():
 
             if not self.obstacleInFront():
-                print('freeee')
+                print('free')
                 self.moveForward()
             else:
-                print('noooooope')
+                print('obstacle in sight')
                 self.stopMoving()
-                # self.choosePath()
-                # rospy.sleep(1)
             rospy.sleep(0)
     
     def obstacleInFront(self):
@@ -47,6 +45,7 @@ class MoveAround():
         rospy.sleep(1)
 
     def stopMoving(self):
+        
         self.move.linear.x = 0
         self.move.linear.z = 0
         self.cmd_vel.publish(self.move)

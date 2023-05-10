@@ -15,11 +15,10 @@ class SendImage:
 
     def __init__(self):
         # Specify the IP address and port number of the receiver
+        # Specify the path of the image you want to send
         self.IP_ADDRESS = '192.168.8.5'
         self.PORT = 7123
-        # self.path = '../images/red_shirt.jpg'
-        # self.path = '../images/20230426-170104-photo.png'
-        self.path = '../images/photo.png'
+        self.path = '/home/mustar/jupiter/matus/matus_showcase/images/photo.png'
         self.image_data = None
 
     # Open the image file

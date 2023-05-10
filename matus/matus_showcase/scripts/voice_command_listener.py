@@ -23,9 +23,14 @@ class VoiceCommandListener:
             talk_back_text = "Starting person recognition."
             talker = Talker(talk_back_text)
             talker.talk()
-            os.chdir('/home/mustar/jupiter/matus/matus_showcase/scripts')    
             os.system('rosrun matus_showcase take_picture.py')        
             os.system('rosrun matus_showcase send_image.py')
+        elif(msg.data == 'find object'):
+            talk_back_text = "Searching for a cup."
+            talker = Talker(talk_back_text)
+            talker.talk()
+            os.system('rosrun matus_showcase take_picture.py')
+            os.system('rosrun matus_showcase find_a_cup.py')
         else:
             talk_back_text = msg.data
             talker = Talker(talk_back_text)
