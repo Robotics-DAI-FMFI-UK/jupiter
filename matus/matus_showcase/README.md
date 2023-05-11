@@ -1,4 +1,4 @@
-#Robot Jupiter
+# Robot Jupiter
 Dokumentácia príkazov pre robot Jupiter za účelom uľahčenia zapojenia sa do súťaže robocup@home Junior pre žiakov stredných škôl
 
 * lidar-obstacle-detection  - Detekcia prekážok pomocou lidaru
