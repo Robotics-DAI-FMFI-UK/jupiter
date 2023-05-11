@@ -15,7 +15,7 @@ def SpeechRecognizer():
 
     # obtain audio from the microphone
     with sr.Microphone() as source:
-        audio = r.listen(source)
+        audio = r.listen(source, timeout=5)
 
     # recognize speech using Google Speech Recognition
     try:
