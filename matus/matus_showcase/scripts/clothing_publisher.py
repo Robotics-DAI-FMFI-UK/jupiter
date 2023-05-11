@@ -5,6 +5,7 @@ from matus_showcase.msg import ClothesMessage
 
 class ClothingPublisher:
 
+    # Initialize the node
     def __init__(self, clothing):
         rospy.init_node('clothingPublisher', anonymous=False)
         rospy.loginfo("Clothing publisher was initialized.")

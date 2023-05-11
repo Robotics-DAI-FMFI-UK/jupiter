@@ -42,11 +42,11 @@ class SendImage:
         # Send the image data
         self.sock.sendall(self.image_data)
 
-        #Wait for the answer
+        # Wait for the answer
         answer = self.sock.recv(4096)
         print(answer)
         
-        #publish a message to /clothes topic
+        # Publish a message to /clothes topic
         ClothingPublisher(answer)
 
         talker = Talker(answer)

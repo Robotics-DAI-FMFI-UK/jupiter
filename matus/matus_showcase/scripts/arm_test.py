@@ -50,7 +50,7 @@ class Loop:
             self.joint5.publish(self.pos5)
             rospy.sleep(2)
 
-            self.pos1 = 1.5 
+            self.pos1 = 1.5
             self.pos2 = 0.0
             self.pos3 = 0.0
             self.pos4 = 0.0

@@ -10,7 +10,7 @@ class Talker:
         self.text = self.text_init(text)
         # Create a text-to-speech object and specify the language
         tts = gTTS(text=self.text, lang='en')
-        self.path_to_file = '/home/mustar/jupiter/matus/matus_showcase/audio_files/response.mp3'
+        self.path_to_file = '/home/mustar/jupiter/matus/matus_showcase/tmp_audio/response.mp3'
 
         # Save the audio file
         tts.save(self.path_to_file)
