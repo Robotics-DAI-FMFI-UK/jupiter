@@ -9,12 +9,16 @@ from cv_bridge import CvBridge, CvBridgeError
  
 class ImageConverter:
 
+    # initialize publisher and subscriber
     def __init__(self):
         self.image_pub = rospy.Publisher("image_topic_2", Image)
         self.bridge = CvBridge()
         self.image_sub = rospy.Subscriber("/camera/rgb/image_raw", Image, self.callback)
         self.cv_image = None
- 
+
+    
+    # convert the image message to a cv2 image
+    # display it in a window, and wait for a key press.
     def callback(self,data):
         try:
             self.cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
@@ -28,12 +32,13 @@ class ImageConverter:
         except CvBridgeError as e:
             print(e)
  
-def main(args):
-    ic = ImageConverter()
-    rospy.init_node('image_converter', anonymous=True)
-    rospy.spin()
-    print("Shutting down")
-    cv2.destroyAllWindows()
+    # Start the node
+    def start_stream(self):
+        rospy.init_node('image_converter', anonymous=True)
+        rospy.spin()
+        print("Shutting down")
+        cv2.destroyAllWindows()
  
 if __name__ == '__main__':
-     main(sys.argv)
+    ic = ImageConverter()
+    ic.start_stream()
