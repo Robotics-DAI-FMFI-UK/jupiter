@@ -5,6 +5,7 @@ import darknet
 
 import cv2
 import numpy as np
+from coordinate_publisher import CoordinatesPublisher
 
 # Set the path to the darknet directory
 darknet_path = "/home/mustar/darknet"
@@ -44,7 +45,9 @@ for result in cup_results:
 print(results)
 print(cup_bboxes)
 
+CoordinatesPublisher(cup_bboxes[0])
+
 # Display the image with the bounding boxes
-cv2.imshow("Cup Detection", img)
-cv2.waitKey(0)
-cv2.destroyAllWindows()
+# cv2.imshow("Cup Detection", img)
+# cv2.waitKey(0)
+# cv2.destroyAllWindows()

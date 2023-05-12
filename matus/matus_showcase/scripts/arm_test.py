@@ -1,20 +1,7 @@
 #!/usr/bin/env python
 import rospy
+import numpy
 from std_msgs.msg import Float64
-
-'''
-    real world dimensions:
-    width = 40cm
-    height = 31 cm
-    depth = 32 cm
-    cup_center = 
-    
-
-    image
-    width = 640 pixel
-    height = 480 pixel
-    cup_center = 
-'''
 
 class Loop:
     def __init__(self):
