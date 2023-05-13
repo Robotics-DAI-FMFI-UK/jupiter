@@ -9,15 +9,15 @@ class Loop:
 
         # publish command message to joints/servos of arm
         # max 2.7 or -2.7 and 1.5 = 90 degrees 0.75 = 45 degrees
-        self.joint1 = rospy.Publisher('/waist_controller/command',Float64)
+        self.joint1 = rospy.Publisher('/waist_controller/command',Float64, queue_size=10)
         # max 2.7 or -2.7 and 1.5 = 90 degrees 0.75 = 45 degrees
-        self.joint2 = rospy.Publisher('/shoulder_controller/command',Float64)
+        self.joint2 = rospy.Publisher('/shoulder_controller/command',Float64, queue_size=10)
         # max 2.7 or -2.7 and 1.5 = 90 degrees 0.75 = 45 degrees
-        self.joint3 = rospy.Publisher('/elbow_controller/command',Float64)
+        self.joint3 = rospy.Publisher('/elbow_controller/command',Float64, queue_size=10)
         # max 1.75 or -1.75 and 1.5 = 90 degrees 0.75 = 45 degrees
-        self.joint4 = rospy.Publisher('/wrist_controller/command',Float64)
+        self.joint4 = rospy.Publisher('/wrist_controller/command',Float64, queue_size=10)
         # max 0.7 or -0.4 and -0.4 = open wide degrees 0.7 = closed
-        self.joint5 = rospy.Publisher('/hand_controller/command',Float64)
+        self.joint5 = rospy.Publisher('/hand_controller/command',Float64, queue_size=10)
         self.pos1 = Float64()
         self.pos2 = Float64()
         self.pos3 = Float64()
@@ -37,17 +37,40 @@ class Loop:
             self.joint5.publish(self.pos5)
             rospy.sleep(2)
 
-            self.pos1 = 1.5
-            self.pos2 = 0.0
-            self.pos3 = 0.0
-            self.pos4 = 0.0
-            self.pos5 = 0.0
-            self.joint1.publish(self.pos1)
-            self.joint2.publish(self.pos2)
-            self.joint3.publish(self.pos3)
-            self.joint4.publish(self.pos4)
+            # dopocitaj waist alebo pos1 suradnicu podlacentra bboxu
+            self.pos1 = 0.75
+            self.pos2 = 1.3
+            self.pos3 = 0.9
+            self.pos4 = 1
+            self.pos5 = -0.4
             self.joint5.publish(self.pos5)
-            rospy.sleep(1)
+            rospy.sleep(2)
+            self.joint4.publish(self.pos4)
+            rospy.sleep(2)
+            self.joint1.publish(self.pos1)
+            rospy.sleep(2)
+            self.joint2.publish(self.pos2)
+            rospy.sleep(2)
+            self.joint3.publish(self.pos3)
+            rospy.sleep(2)
+            self.joint4.publish(self.pos4)
+            rospy.sleep(2)
+            self.pos5 = 0.25
+            self.joint5.publish(self.pos5)
+            rospy.sleep(2)
+            self.pos2 = -0.4
+            self.joint2.publish(self.pos2)
+            rospy.sleep(2)
+            self.pos5 = 0.2
+            self.joint5.publish(self.pos5)
+            self.pos1 = -1.8
+            self.joint1.publish(self.pos1)
+            self.pos3 = 1.5
+            self.joint3.publish(self.pos3)
+            self.pos4 = 1.5
+            self.joint4.publish(self.pos4)
+
+            rospy.sleep(2)
 
 
     def cleanup(self):
