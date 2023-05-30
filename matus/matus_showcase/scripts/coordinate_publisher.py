@@ -7,7 +7,7 @@ class CoordinatesPublisher:
 
     # Initialize the node
     def __init__(self, coordinates):
-        rospy.init_node('coordinatesPublisher', anonymous=False)
+        rospy.init_node('coordinates_publisher', anonymous=False)
         rospy.loginfo("Object coordinates publisher was initialized.")
         rospy.on_shutdown(self.shutdown)
         self.coordinates = coordinates
@@ -15,11 +15,11 @@ class CoordinatesPublisher:
         self.pub = rospy.Publisher('objectCoordinates', ObjectCoordinates, queue_size=10)
         
         while not rospy.is_shutdown():
-            self.publishCoordinatesMessage()
-            rospy.sleep(1)
+            self.publish_coordinates_message()
+            
         rospy.signal_shutdown("STOP")
     
-    def publishCoordinatesMessage(self):
+    def publish_coordinates_message(self):
         msg = ObjectCoordinates()
         x1, y1, x2, y2 = self.coordinates
         msg.x1 = x1

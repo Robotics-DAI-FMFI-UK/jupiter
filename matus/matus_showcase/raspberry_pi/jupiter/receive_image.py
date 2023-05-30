@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 import socket
-import os
 from classify_image import *
-import argparse
 
 class ImageReceiver:
     def __init__(self):
+        # Specify the IP address and port number of the sender
+        # Specify the path of the image save destination
         self.IP_ADDRESS = '0.0.0.0'
         self.PORT = 7123
         self.save_path = '/home/pi/jupiter/clothes/received.png'
@@ -41,7 +41,7 @@ class ImageReceiver:
                               
                 result = classification()
                 
-                #send the answer
+                # Send the classification result as answer
                 conn.send(result.encode("utf-8"))
                 print(result)
 

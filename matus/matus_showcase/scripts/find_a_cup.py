@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 from coordinate_publisher import CoordinatesPublisher
 
-# Set the path to the darknet directory
+# Set the path to the darknet and image directory
 darknet_path = "/home/mustar/darknet"
 image_path = "/home/mustar/jupiter/matus/matus_showcase/images/photo.png"
 
@@ -16,6 +16,7 @@ config_path = os.path.join(darknet_path, "cfg/yolov3.cfg")
 weights_path = os.path.join(darknet_path, "yolov3.weights")
 data_path = os.path.join(darknet_path, "cfg/coco.data")
 
+# Initialize darknet neural network
 network, class_names, class_colors = darknet.load_network(config_path, data_path, weights_path, batch_size=1)
 
 # Load the image and convert it to a darknet-compatible format
@@ -42,12 +43,14 @@ for result in cup_results:
 
     cup_bboxes.append((x1, y1, x2, y2))
 
-print(results)
-print(cup_bboxes)
+if cup_bboxes:
+    print(cup_bboxes)
 
-CoordinatesPublisher(cup_bboxes[0])
+    # Display the image with the bounding boxes
+    # cv2.imshow("Cup Detection", img)
+    # cv2.waitKey(0)
+    # cv2.destroyAllWindows()
+    CoordinatesPublisher(cup_bboxes[0])
 
-# Display the image with the bounding boxes
-# cv2.imshow("Cup Detection", img)
-# cv2.waitKey(0)
-# cv2.destroyAllWindows()
+else:
+    print("No cup was found in the picture!")

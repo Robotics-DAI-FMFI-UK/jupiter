@@ -1,33 +1,34 @@
 #!/usr/bin/env python
 
 from __future__ import print_function
-import sys
 import rospy
 import cv2
-import os
 from std_msgs.msg import String
 from sensor_msgs.msg import Image
 from cv_bridge import CvBridge, CvBridgeError
-import time
 
 class TakePicture:
 
 
-    # Choose whic camera to take a picture with
+    # Choose which camera to take a picture with
     # Choose a path to save the picture and a name of the picture
     # Initialize a camera topic subscriber
-    def __init__(self):
+    # top camera is default
+    # run like this to change to lower camera for find_a_cup.py:
+    # rosrun matus_showcase take_picture.py _camera_topic:=/camera/rgb/image_raw
+
+    def __init__(self, camera_topic="/camera_top/rgb/image_raw"):
+
         self.bridge = CvBridge()
         self.image_recieved = False
-        # image_topic = "/camera_top/rgb/image_raw"
-        image_topic = "/camera/rgb/image_raw"
-        self.image_subscriber = rospy.Subscriber(image_topic, Image, self.callback)
+
+        self.image_subscriber = rospy.Subscriber(camera_topic, Image, self.img_callback)
         self.img_path = "/home/mustar/jupiter/matus/matus_showcase/images/photo.png"
         rospy.sleep(1)
     
     # Read image data from camera topic and transform it to opencv format
-    # 
-    def callback(self, data):
+    # Resize the image if needed
+    def img_callback(self, data):
         try:
             cv_image = self.bridge.imgmsg_to_cv2(data, "bgr8")
             # cv_image = self.resize_image(cv_image)

@@ -7,18 +7,18 @@ class ClothingPublisher:
 
     # Initialize the node
     def __init__(self, clothing):
-        rospy.init_node('clothingPublisher', anonymous=False)
+        rospy.init_node('clothing_publisher', anonymous=False)
         rospy.loginfo("Clothing publisher was initialized.")
         rospy.on_shutdown(self.shutdown)
         self.clothing = clothing
 
         self.pub = rospy.Publisher('clothes', ClothesMessage, queue_size=10)
         
-        self.publishClothesMessage()
+        self.publish_clothes_message()
         rospy.sleep(1)
         rospy.signal_shutdown("STOP")
     
-    def publishClothesMessage(self):
+    def publish_clothes_message(self):
         msg = ClothesMessage
         msg.glasses = True if self.clothing == "glasses" else False
         msg.cap = True if self.clothing == "cap" else False

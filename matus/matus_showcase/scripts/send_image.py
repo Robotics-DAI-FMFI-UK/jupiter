@@ -7,7 +7,7 @@ import rospy
 import os
 from talk_back import *
 from clothing_publisher import *
-import time
+from person_recognizer import *
 import struct
 
 
@@ -49,6 +49,7 @@ class SendImage:
         # Publish a message to /clothes topic
         ClothingPublisher(answer)
 
+        # Say the answer out loud
         talker = Talker(answer)
         talker.talk()
 

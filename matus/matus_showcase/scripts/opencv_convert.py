@@ -16,7 +16,6 @@ class ImageConverter:
         self.image_sub = rospy.Subscriber("/camera/rgb/image_raw", Image, self.callback)
         self.cv_image = None
 
-    
     # convert the image message to a cv2 image
     # display it in a window, and wait for a key press.
     def callback(self,data):

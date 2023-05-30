@@ -9,7 +9,7 @@ class CoordinatesCalculator:
 
     def __init__(self):
 
-        rospy.init_node('armCoordinatesPublisher', anonymous=False)
+        rospy.init_node('arm_coordinates_publisher', anonymous=False)
         rospy.loginfo("Arm coordinates publisher was initialized.")
         rospy.on_shutdown(self.shutdown)
 
@@ -18,16 +18,19 @@ class CoordinatesCalculator:
 
         # image dimensions
         self.image_width, self.image_height, self.channels = img.shape
-        print(self.image_width, self.image_height)
+        print("Image dimensions: ",self.image_width, self.image_height)
+        self.min_waist_angle = -0.75
+        self.max_waist_angle = 0.75
 
         self.bbox = (0,0,0,0)
         self.center_x = 0
         self.center_y = 0
+        rospy.Subscriber('objectCoordinates', ObjectCoordinates, self.coordinates_callback)
+        rospy.sleep(1)
+
+        self.waist_angle_pub = rospy.Publisher('waistAngle', Float64, queue_size=10)
 
         while not rospy.is_shutdown():
-            rospy.Subscriber('objectCoordinates', ObjectCoordinates, self.coordinates_callback)
-            rospy.sleep(1)
-            print(self.bbox)
             self.publish_waist_angle()
 
 
@@ -37,28 +40,24 @@ class CoordinatesCalculator:
         msg = Float64()
         msg.data = waist_angle
 
-        self.waist_angle_pub = rospy.Publisher('waistAngle', Float64, queue_size=10)
         self.waist_angle_pub.publish()
 
     def calculate_waist_turn(self):
 
         # Define the range of angles for the arm
-        min_waist_angle = -0.75
-        max_waist_angle = 0.75
+        min_waist_angle = self.min_waist_angle
+        max_waist_angle = self.max_waist_angle
         # Define the range of x-coordinates for the picture
         min_img_x = 0
-        max_img_x = 639
+        max_img_x = self.image_width - 1 
 
         # Compute the slope and y-intercept of the line that maps x-coordinates to arm angles
         slope = (max_waist_angle - min_waist_angle) / (max_img_x - min_img_x)
         y_intercept = min_waist_angle - slope * min_img_x
 
         # Given an x-coordinate, compute the corresponding angle of the arm
-        def x_to_angle(x):
-            return slope * x + y_intercept
-
-        # Test the function with some sample x-coordinates
-        self.waist_angle = x_to_angle(self.center_x)
+        # return the value of waist angle turn
+        return slope * self.center_x + y_intercept
 
     def coordinates_callback(self, coordinates_msg):
         

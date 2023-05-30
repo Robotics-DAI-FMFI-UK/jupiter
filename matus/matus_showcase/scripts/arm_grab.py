@@ -8,42 +8,26 @@ class Loop:
 
         rospy.on_shutdown(self.shutdown)
 
-
-        # publish command message to joints/servos of arm
-        # max 2.7 or -2.7 and 1.5 = 90 degrees 0.75 = 45 degrees
-        self.waist = rospy.Publisher('/waist_controller/command',Float64, queue_size=10)
-        # max 2.7 or -2.7 and 1.5 = 90 degrees 0.75 = 45 degrees
-        self.shoulder = rospy.Publisher('/shoulder_controller/command',Float64, queue_size=10)
-        # max 2.7 or -2.7 and 1.5 = 90 degrees 0.75 = 45 degrees
-        self.elbow = rospy.Publisher('/elbow_controller/command',Float64, queue_size=10)
-        # max 1.75 or -1.75 and 1.5 = 90 degrees 0.75 = 45 degrees
-        self.wrist = rospy.Publisher('/wrist_controller/command',Float64, queue_size=10)
-        # max 0.7 or -0.4 and -0.4 = open wide degrees 0.7 = closed
-        self.hand = rospy.Publisher('/hand_controller/command',Float64, queue_size=10)
-        self.pos1 = Float64()
-        self.pos2 = Float64()
-        self.pos3 = Float64()
-        self.pos4 = Float64()
-        self.pos5 = Float64()
+        self.set_up_joint_publishers()
 
         self.waist_angle = 0
+
+        self.waist_angle_subscriber = rospy.Subscriber('waistAngle', Float64, self.waist_angle_callback)
+
 
         while not rospy.is_shutdown():
 
             self.initial_position()
 
-            self.waist_angle_subscriber = rospy.Subscriber('waistAngle', Float64, self.waist_angle_callback)
-            
-            self.cup_position()
+            self.cup_position(self.waist_angle)
 
             self.put_away_position()
+
+            rospy.signal_shutdown()
 
 
     def waist_angle_callback(self, msg):
         self.waist_angle = msg.data
-
-    def shutdown(self):
-        rospy.loginfo("Shutting down robot arm....")
 
     def initial_position(self):
         self.pos1 = 0.0
@@ -57,8 +41,8 @@ class Loop:
         self.wrist.publish(self.pos4)
         self.hand.publish(self.pos5)
 
-    def cup_position(self):
-        self.pos1 = self.waist_angle
+    def cup_position(self, waist_angle):
+        self.pos1 = waist_angle
         self.pos2 = 1.3
         self.pos3 = 0.9
         self.pos4 = 1
@@ -92,8 +76,30 @@ class Loop:
         self.pos4 = 1.5
         self.wrist.publish(self.pos4)
 
+    def set_up_joint_publishers(self):
+
+        # publish command message to joints/servos of arm
+        # max 2.7 or -2.7 and 1.5 = 90 degrees 0.75 = 45 degrees
+        self.waist = rospy.Publisher('/waist_controller/command',Float64, queue_size=10)
+        # max 2.7 or -2.7 and 1.5 = 90 degrees 0.75 = 45 degrees
+        self.shoulder = rospy.Publisher('/shoulder_controller/command',Float64, queue_size=10)
+        # max 2.7 or -2.7 and 1.5 = 90 degrees 0.75 = 45 degrees
+        self.elbow = rospy.Publisher('/elbow_controller/command',Float64, queue_size=10)
+        # max 1.75 or -1.75 and 1.5 = 90 degrees 0.75 = 45 degrees
+        self.wrist = rospy.Publisher('/wrist_controller/command',Float64, queue_size=10)
+        # max 0.7 or -0.4 and -0.4 = open wide degrees 0.7 = closed
+        self.hand = rospy.Publisher('/hand_controller/command',Float64, queue_size=10)
+        self.pos1 = Float64()
+        self.pos2 = Float64()
+        self.pos3 = Float64()
+        self.pos4 = Float64()
+        self.pos5 = Float64()
+
+    def shutdown(self):
+        rospy.loginfo("Shutting down robot arm....")
+
 if __name__=="__main__":
-    rospy.init_node('arm')
+    rospy.init_node('arm_grab')
     try:
         Loop()
         rospy.spin()

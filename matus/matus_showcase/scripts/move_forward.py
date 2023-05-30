@@ -3,15 +3,14 @@ import rospy
 from geometry_msgs.msg import Twist
 from matus_showcase.msg import DetectedObstacles
 
-class MoveAround():
-
+class MoveForward():
     def __init__(self):
-        rospy.init_node('forwardPublisher', anonymous=False)
+        rospy.init_node('forward_publisher', anonymous=False)
         rospy.on_shutdown(self.shutdown)
         rospy.loginfo("To stop Jupyter press CTRL + C")
-        self.cmd_vel = rospy.Publisher('/cmd_vel_mux/input/navi', Twist, queue_size=10)
+        self.movement_publisher = rospy.Publisher('/cmd_vel_mux/input/navi', Twist, queue_size=10)
         self.move = Twist()
-        self.freePathsListener = rospy.Subscriber('freePaths', DetectedObstacles, self.freePathCallback)
+        self.freePathsListener = rospy.Subscriber('freePaths', DetectedObstacles, self.free_path_callback)
 
         self.directionObstacles = {
             "Front" : False,
@@ -25,84 +24,68 @@ class MoveAround():
         }
 
         while not rospy.is_shutdown():
+            self.choose_path()
 
-            if not self.obstacleInFront():
-                print('free')
-                self.moveForward()
-            else:
-                print('obstacle in sight')
-                self.stopMoving()
-            rospy.sleep(0)
-    
-    def obstacleInFront(self):
-        # print("VPREDU> ", self.directionObstacles['Front'])
-        return self.directionObstacles['Front']
+    # return true if obstacle is in direction
+    # return false if no obstacle is in direction
+    # directions: "Front", "FrontRight", "Right", "BackRight", "Back", "BackLeft", "Left", "FrontLeft"
+    def obstacle_in_direction(self, direction):
+        return self.directionObstacles[direction]
     
     def shutdown(self):
-
         rospy.loginfo("Stop Jupyter")
-        self.cmd_vel.publish(Twist())
+        self.movement_publisher.publish(Twist())
         rospy.sleep(1)
 
-    def stopMoving(self):
-        
+    def stop_moving(self): 
         self.move.linear.x = 0
-        self.move.linear.z = 0
-        self.cmd_vel.publish(self.move)
+        self.move.angular.z = 0
+        self.movement_publisher.publish(self.move)
 
-    def moveForward(self):
-
+    def move_forward(self):
         self.move.linear.x = 0.2
-        self.move.linear.z = 0
-        self.cmd_vel.publish(self.move)
+        self.move.angular.z = 0
+        self.movement_publisher.publish(self.move)
 
-    def moveBackward(self):
-
+    def move_backwards(self):
         self.move.linear.x = -0.2
-        self.move.linear.z = 0
-        self.cmd_vel.publish(self.move)
+        self.move.angular.z = 0
+        self.movement_publisher.publish(self.move)
 
-    def turnLeft(self):
-
+    def turn_left(self):
         self.move.linear.x = 0
         self.move.angular.z = 0.5
-        self.cmd_vel.publish(self.move)
+        self.movement_publisher.publish(self.move)
 
-    def turnRight(self):
-
+    def turn_right(self):
         self.move.linear.x = 0
         self.move.angular.z = -0.5
-        self.cmd_vel.publish(self.move)
+        self.movement_publisher.publish(self.move)
 
-    def freePathCallback(self, data):
+    def free_path_callback(self, data):
+        self.directionObstacles['Front'] = bool(data.front)
+        self.directionObstacles['FrontRight'] = bool(data.frontRight)
+        self.directionObstacles['Right'] = bool(data.right)
+        self.directionObstacles['BackRight'] = bool(data.backRight)
+        self.directionObstacles['Back'] = bool(data.back)
+        self.directionObstacles['BackLeft'] = bool(data.backLeft)
+        self.directionObstacles['Left'] = bool(data.left)
+        self.directionObstacles['FrontLeft'] = bool(data.frontLeft)
 
-        self.directionObstacles['Front'] = True if data.front == 1 else False
-        self.directionObstacles['FrontRight'] = True if data.frontRight == 1 else False
-        self.directionObstacles['Right'] = True if data.right == 1 else False
-        self.directionObstacles['BackRight'] = True if data.backRight == 1 else False
-        self.directionObstacles['Back'] = True if data.back == 1 else False
-        self.directionObstacles['BackLeft'] = True if data.backLeft == 1 else False
-        self.directionObstacles['Left'] = True if data.left == 1 else False
-        self.directionObstacles['FrontLeft'] = True if data.frontLeft == 1 else False
-
-    def choosePath(self):
-
-        if self.directionObstacles['FrontLeft']:
-            self.turnRight()
-            return
-        elif self.directionObstacles['FrontRight']:
-            self.turnLeft()
-            return
-        elif self.directionObstacles['Left']:
-            self.turnRight()
-            return
-        elif self.directionObstacles['Right']:
-            self.turnLeft()
-            return
+    def choose_path(self):
+        if not self.obstacle_in_direction("Front"):
+            self.move_forward()
+        elif self.obstacle_in_direction('FrontLeft') and not self.obstacle_in_direction('FrontRight'):
+            self.turn_right()
+        elif self.obstacle_in_direction('FrontRight') and not self.obstacle_in_direction('FrontLeft'):
+            self.turn_left()
+        elif self.obstacle_in_direction('Left') and not self.obstacle_in_direction('Right'):
+            self.turn_right()
+        elif self.obstacle_in_direction('Right') and not self.obstacle_in_direction('Left'):
+            self.turn_left()
 
 if __name__ == '__main__':
-    MoveAround()
-    # try:
-    #     MoveAround()
-    # except:
-    #     rospy.loginfo("MoveForward node terminated.")
+    try:
+        MoveForward()
+    except:
+        rospy.loginfo("MoveForward node terminated.")
