@@ -3,6 +3,7 @@
 	<include file="$(find turtlebot_bringup)/launch/minimal.launch"/>
   	<!-- Laserscan launch -->
 	<include file="$(find rplidar_ros)/launch/rplidar.launch"/>
+	<!-- Arm launch -->
 	<include file="$(find rchomeedu_arm)/launch/arm.launch"/>
 	<node name="obstaclePublisher" pkg="matus_showcase" type="detect_obstacles.py"></node>
 
