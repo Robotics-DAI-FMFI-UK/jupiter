@@ -15,7 +15,8 @@ class VoiceCommandListener:
         self.command_actions = {
             '!Error': self.handle_error,
             'recognize': self.start_person_recognition,
-            'find object': self.search_for_cup
+            'find object': self.search_for_cup,
+            'move forward': self.move_forward
         }
 
     def voice_command_callback(self, msg):
@@ -44,6 +45,11 @@ class VoiceCommandListener:
         self.talk_back(talk_back_text)
         os.system('rosrun matus_showcase take_picture.py _camera_topic:=/camera/rgb/image_raw')
         os.system('rosrun matus_showcase find_a_cup.py')
+
+    def move_forward(self):
+        talk_back_text = "Moving forward."
+        self.talk_back(talk_back_text)
+        os.system('rosrun matus_showcase move_forward.py')
 
     def start(self):
         rospy.spin()
