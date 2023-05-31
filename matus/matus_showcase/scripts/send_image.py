@@ -49,10 +49,6 @@ class SendImage:
         # Publish a message to /clothes topic
         ClothingPublisher(answer)
 
-        # Say the answer out loud
-        talker = Talker(answer)
-        talker.talk()
-
         # Close the socket
         self.sock.close()
     
