@@ -3,7 +3,7 @@ import rospy
 import numpy
 from std_msgs.msg import Float64
 
-class Loop:
+class ArmGrab:
     def __init__(self):
 
         rospy.on_shutdown(self.shutdown)
@@ -99,7 +99,7 @@ class Loop:
 if __name__=="__main__":
     rospy.init_node('arm_grab')
     try:
-        Loop()
+        ArmGrab()
         rospy.spin()
     except rospy.ROSInterruptException:
         pass
