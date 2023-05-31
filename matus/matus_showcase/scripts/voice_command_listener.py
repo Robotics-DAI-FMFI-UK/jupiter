@@ -45,7 +45,7 @@ class VoiceCommandListener:
         self.talk_back(talk_back_text)
         os.system('rosrun matus_showcase take_picture.py _camera_topic:=/camera/rgb/image_raw')
         os.system('rosrun matus_showcase arm_coordinates_calculator.py')
-        os.system('rosrun matus_showcase find_a_cup.py')
+        os.system('rosrun matus_showcase arm_grab.py')
         os.system('rosrun matus_showcase find_a_cup.py')
 
     def move_forward(self):
