@@ -14,20 +14,18 @@ class Loop:
 
         self.waist_angle_subscriber = rospy.Subscriber('waistAngle', Float64, self.waist_angle_callback)
 
-
-        while not rospy.is_shutdown():
-
-            self.initial_position()
-
-            self.cup_position(self.waist_angle)
-
-            self.put_away_position()
-
-            rospy.signal_shutdown()
-
+        rospy.spin()
 
     def waist_angle_callback(self, msg):
-        self.waist_angle = msg.data
+        if self.waist_angle is None:  # Check if waist angle is None
+            self.waist_angle = msg.data
+
+            # Arm movement starts when waist angle is published
+            self.initial_position()
+            self.cup_position(self.waist_angle)
+            self.put_away_position()
+
+            rospy.signal_shutdown("Finished arm movement")  # Signal shutdown after arm movement is complete
 
     def initial_position(self):
         self.pos1 = 0.0
