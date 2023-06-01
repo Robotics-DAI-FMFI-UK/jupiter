@@ -19,8 +19,8 @@ class CoordinatesCalculator:
         # image dimensions
         self.image_width, self.image_height, self.channels = img.shape
         print("Image dimensions: ",self.image_width, self.image_height)
-        self.min_waist_angle = -0.75
-        self.max_waist_angle = 0.75
+        self.min_waist_angle = -0.785
+        self.max_waist_angle = 0.785
 
         self.bbox = (0,0,0,0)
         self.center_x = 0
@@ -44,20 +44,13 @@ class CoordinatesCalculator:
 
     def calculate_waist_turn(self):
 
-        # Define the range of angles for the arm
-        min_waist_angle = self.min_waist_angle
-        max_waist_angle = self.max_waist_angle
-        # Define the range of x-coordinates for the picture
-        min_img_x = 0
-        max_img_x = self.image_width - 1 
+        radians_range = self.max_waist_angle - (self.min_waist_angle)
+        image_width = self.image_width
+        center_pixel = self.center_x
+        
+        radians = (center_pixel / image_width) * radians_range + (self.min_waist_angle)
 
-        # Compute the slope and y-intercept of the line that maps x-coordinates to arm angles
-        slope = (max_waist_angle - min_waist_angle) / (max_img_x - min_img_x)
-        y_intercept = min_waist_angle - slope * min_img_x
-
-        # Given an x-coordinate, compute the corresponding angle of the arm
-        # return the value of waist angle turn
-        return slope * self.center_x + y_intercept
+        return radians
 
     def coordinates_callback(self, coordinates_msg):
         

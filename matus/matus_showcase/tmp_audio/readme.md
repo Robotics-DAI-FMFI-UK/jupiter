@@ -1,2 +1,2 @@
 # DO NOT DELETE THIS DIRECTORY!
-Used to store temporary audio files for talk back python script [talk_back.py](https://github.com/Robotics-DAI-FMFI-UK/jupiter/blob/basic-obstacle-detection/matus/matus_showcase/scripts/talk_back.py).
+Used to store temporary audio files for talk back python script [talk_back.py](https://github.com/Robotics-DAI-FMFI-UK/jupiter/blob/main/matus/matus_showcase/scripts/talk_back.py).
