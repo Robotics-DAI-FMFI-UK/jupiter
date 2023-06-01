@@ -44,7 +44,7 @@ class CoordinatesCalculator:
 
     def calculate_waist_turn(self):
 
-        radians_range = self.max_waist_angle - (-self.min_waist_angle)
+        radians_range = self.max_waist_angle - (self.min_waist_angle)
         image_width = self.image_width
         center_pixel = self.center_x
         
