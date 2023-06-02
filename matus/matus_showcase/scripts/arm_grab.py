@@ -10,22 +10,25 @@ class ArmGrab:
 
         self.set_up_joint_publishers()
 
-        self.waist_angle = 0
-
-        self.waist_angle_subscriber = rospy.Subscriber('waistAngle', Float64, self.waist_angle_callback)
+        self.waist_angle_subscriber = rospy.Subscriber('jointCoordinates', Float64, self.waist_angle_callback)
 
         rospy.spin()
 
     def waist_angle_callback(self, msg):
-        if self.waist_angle is None:  # Check if waist angle is None
-            self.waist_angle = msg.data
+        waist = msg.waist
+        shoulder = msg.shoulder
+        elbow = msg.elbow
+        wrist = msg.wrist
 
-            # Arm movement starts when waist angle is published
-            self.initial_position()
-            self.cup_position(self.waist_angle)
-            self.put_away_position()
+        print(msg.data)
 
-            rospy.signal_shutdown("Finished arm movement")  # Signal shutdown after arm movement is complete
+        # Arm movement starts when waist angle is published
+        self.initial_position()
+        self.cup_position(waist, shoulder, elbow, wrist)
+        self.put_away_position()
+        self.initial_position()
+
+        rospy.signal_shutdown("Finished arm movement")  # Signal shutdown after arm movement is complete
 
     def initial_position(self):
         self.pos1 = 0.0
@@ -39,11 +42,11 @@ class ArmGrab:
         self.wrist.publish(self.pos4)
         self.hand.publish(self.pos5)
 
-    def cup_position(self, waist_angle):
-        self.pos1 = waist_angle
-        self.pos2 = 1.3
-        self.pos3 = 0.9
-        self.pos4 = 1
+    def cup_position(self, waist, shoulder, elbow, wrist):
+        self.pos1 = waist
+        self.pos2 = shoulder
+        self.pos3 = elbow
+        self.pos4 = wrist
         self.pos5 = -0.4
         self.hand.publish(self.pos5)
         rospy.sleep(2)
@@ -55,8 +58,6 @@ class ArmGrab:
         rospy.sleep(2)
         self.elbow.publish(self.pos3)
         rospy.sleep(2)
-        self.wrist.publish(self.pos4)
-        rospy.sleep(2)
 
     def put_away_position(self):
         self.pos5 = 0.25
@@ -64,15 +65,24 @@ class ArmGrab:
         rospy.sleep(2)
         self.pos2 = -0.4
         self.shoulder.publish(self.pos2)
-        rospy.sleep(2)
+        rospy.sleep(1.5)
         self.pos5 = 0.2
         self.hand.publish(self.pos5)
         self.pos1 = -1.8
         self.waist.publish(self.pos1)
-        self.pos3 = 1.5
+        self.pos3 = 1.8
         self.elbow.publish(self.pos3)
-        self.pos4 = 1.5
+        self.pos4 = 1.3
         self.wrist.publish(self.pos4)
+        rospy.sleep(1)
+        self.pos1 = -2
+        self.waist.publish(self.pos1)
+        self.pos2 = 0
+        self.shoulder.publish(self.pos2)
+        self.pos4 = 1.3
+        self.wrist.publish(self.pos4)
+        self.pos5 = 0
+        self.hand.publish(self.pos5)
 
     def set_up_joint_publishers(self):
 

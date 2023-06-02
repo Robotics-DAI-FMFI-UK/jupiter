@@ -13,9 +13,9 @@ class CoordinatesPublisher:
         self.coordinates = coordinates
 
         self.pub = rospy.Publisher('objectCoordinates', ObjectCoordinates, queue_size=10)
-        
-        while not rospy.is_shutdown():
-            self.publish_coordinates_message()
+        rospy.sleep(1)
+
+        self.publish_coordinates_message()
             
         rospy.signal_shutdown("STOP")
     

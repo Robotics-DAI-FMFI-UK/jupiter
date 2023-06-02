@@ -21,6 +21,7 @@ class TakePicture:
 
         self.bridge = CvBridge()
         self.image_recieved = False
+        camera_topic = rospy.get_param('~camera_topic', '/camera_top/rgb/image_raw')
 
         self.image_subscriber = rospy.Subscriber(camera_topic, Image, self.img_callback)
         self.img_path = "/home/mustar/jupiter/matus/matus_showcase/images/photo.png"
