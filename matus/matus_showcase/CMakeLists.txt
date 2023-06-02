@@ -54,6 +54,7 @@ add_message_files(
   DetectedObstacles.msg
   ClothesMessage.msg
   ObjectCoordinates.msg
+  JointCoordinates.msg
 )
 
 ## Generate services in the 'srv' folder

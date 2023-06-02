@@ -23,9 +23,6 @@ class CoordinatesCalculator:
         # image dimensions
         self.image_width, self.image_height, self.channels = img.shape
         print("Image dimensions: ",self.image_width, self.image_height)
-        self.min_waist_angle = -0.785
-        self.max_waist_angle = 0.785
-
         self.bbox = (0,0,0,0)
         self.center_x = 0
         self.center_y = 0
@@ -72,8 +69,8 @@ class CoordinatesCalculator:
         half_height = bbox_height / 2
 
         # dimensions of the cup
-        object_width = 0.07 #in m
-        object_height = 0.08 #in m
+        object_width = 0.07 # in m
+        object_height = 0.08 # in m
 
         distance_horizontal = (object_width/ 2) / np.tan((60 * np.pi/180) / 2) / half_width
         distance_vertical = (object_height / 2) / np.tan((49.5 * np.pi/180) / 2) / half_height
@@ -94,23 +91,23 @@ class CoordinatesCalculator:
 
         # End effector position (grabber)
         object_distance = self.calculate_object_distance_from_arm()
-        x_grabber = object_distance * np.cos(waist_angle)
-        y_grabber = object_distance * np.sin(waist_angle)
+        x_gripper = object_distance * np.cos(waist_angle)
+        y_gripper = object_distance * np.sin(waist_angle)
 
         # Shoulder
-        theta1 = np.arctan2(y_grabber, x_grabber)
+        theta1 = np.arctan2(y_gripper, x_gripper)
 
         # Elbow
         x2 = L1 * np.cos(theta1)
         y2 = L1 * np.sin(theta1)
 
         # Wrist
-        theta2 = np.arctan2(y_grabber - y2, x_grabber - x2)
+        theta2 = np.arctan2(y_gripper - y2, x_gripper - x2)
         x3 = x2 + L2 * np.cos(theta1 + theta2)
         y3 = y2 + L2 * np.sin(theta1 + theta2)
 
         # Wrist to grabber (End effector)
-        theta3 = np.arctan2(y_grabber - y3, x_grabber - x3)
+        theta3 = np.arctan2(y_gripper - y3, x_gripper - x3)
 
         # Convert angles to radians
         self.shoulder_turn = np.radians(theta1)
