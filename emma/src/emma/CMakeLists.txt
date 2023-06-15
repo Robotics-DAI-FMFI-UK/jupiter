@@ -10,6 +10,7 @@ include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
 #set(ROS_BUILD_TYPE RelWithDebInfo)
 
 rosbuild_init()
+set(CMAKE_CXX_STANDARD 11)
 
 #set the default path for built executables to the "bin" directory
 set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
@@ -36,6 +37,11 @@ rosbuild_add_executable(listener src/learning/listener.cpp)
 rosbuild_add_executable(add_two_ints_server src/learning/add_two_ints_server.cpp)
 rosbuild_add_executable(add_two_ints_client src/learning/add_two_ints_client.cpp)
 
+
+
+
+rosbuild_add_executable(arm_test src/learning/arm_to_xyz.cpp src/learning/jupiter_arm_kinematics.cpp)
+target_link_libraries(arm_test ${catkin_LIBRARIES})
 rosbuild_add_executable(move_arm src/learning/move_arm.cpp)
 rosbuild_add_executable(to_obstacle src/learning/to_obstacle.cpp)
 rosbuild_add_executable(follow_me src/follow_me/follow_me.cpp)
