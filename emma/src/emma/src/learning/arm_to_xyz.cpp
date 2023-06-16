@@ -8,18 +8,6 @@
 
 using namespace std;
 
-/**
- simple example of controlling arm by publishing messages to dynamixel
- * arm controller. First, run
- *   roslaunch rchomeedu_arm arm.launch
- * and then
- *   rosrun emma move_arm
- * 
- * the angle is in radians, we send alternating
- * requests to move waist to positions 60deg, 120deg 
- * every 3 seconds.
- */
-
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "move_arm");
