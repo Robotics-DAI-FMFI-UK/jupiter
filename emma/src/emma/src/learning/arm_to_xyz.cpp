@@ -35,7 +35,6 @@ void rossleep(int n)
   }
 }
    	
-
 int main(int argc, char **argv)
 {
   ros::init(argc, argv, "move_arm");
