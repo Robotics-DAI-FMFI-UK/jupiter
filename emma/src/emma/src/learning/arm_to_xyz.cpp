@@ -9,16 +9,32 @@
 using namespace std;
 
 /**
- simple example of controlling arm by publishing messages to dynamixel
- * arm controller. First, run
+ * example of inverse kinematics for jupiter arm 
+ * Program asks for [x,y,z] of target point, x being
+ * perpendicular to robot heading increasing right,
+ * y is in direction of robot heading, z is vertical,
+ * starting in the axle of servo of second arm joint,
+ * l1=0.105, l2=0.105, l3=0.1 are lenths of the three
+ * arm segments. The last parameter is the angle displacement
+ * of the last segment (angle of approaching the object,
+ * 0deg is vertical downwards, 90deg is in heading direction)
+ * First, run
  *   roslaunch rchomeedu_arm arm.launch
  * and then
- *   rosrun emma move_arm
+ *   rosrun emma arm_test
  * 
- * the angle is in radians, we send alternating
- * requests to move waist to positions 60deg, 120deg 
- * every 3 seconds.
  */
+
+
+void rossleep(int n)
+{
+  for (int i = 0; i < n * 10; i++)
+  {
+      ros::spinOnce();
+      usleep(100000);
+  }
+}
+   	
 
 int main(int argc, char **argv)
 {
@@ -70,10 +86,16 @@ int main(int argc, char **argv)
 
     msg.data = -get<0>(angles);
     arm0_pub.publish(msg);
+    rossleep(3);
+          
     msg.data = get<1>(angles);
     arm1_pub.publish(msg);
+    rossleep(3);
+    
     msg.data = get<2>(angles);
     arm2_pub.publish(msg);
+    rossleep(3);
+    
     msg.data = get<3>(angles);
     arm3_pub.publish(msg);
 
