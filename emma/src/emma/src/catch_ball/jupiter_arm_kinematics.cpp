@@ -14,7 +14,7 @@ tuple<double, double, double, double> findArmAngles(double x, double y, double z
     x = d;
     
     double m = l3 * sin(gamma);
-    double n = l3 * cos(gamma);//sqrt(l1 * l1 - m * m);
+    double n = l3 * cos(gamma);
 
     //dalej pracujeme v rovine x, y
 
@@ -24,19 +24,16 @@ tuple<double, double, double, double> findArmAngles(double x, double y, double z
     
     double r = sqrt(cx * cx + cy * cy);
 
-    //vyjadrene z kosinusovej vety (c^2 = a^2 + b^2 - 2ab * cos(C))
-    //2ab * cos(C) = a^2 + b^2 - c^2                 
-    //cos(C) = (a^2 + b^2 - c^2) / 2ab
-    // C = acos((a^2 + b^2 - c^2) / 2ab)
+    //vyjadrene z kosinusovej vety 
     double phi = acos((l1 * l1 + r * r - l2 * l2) / (2 * l1 * r));
 
-    double omega = asin(cy / r);  //acos((cx * cx + r * r - cy * cy) / (2 * cx * r));
+    double omega = asin(cy / r); 
     double theta2 = M_PI/2 - phi - omega;
 
     double epsilon = acos((l1 * l1 + l2 * l2 - r * r) / (2 * l1 * l2));
     double beta = M_PI - epsilon;
 
-    double delta = M_PI - theta2 - beta - gamma;    //psi = 2*M_PI - alpha - epsilon - omega - M_PI/2;
+    double delta = M_PI - theta2 - beta - gamma;   
 
     //double delta = M_PI - psi - gamma;
 
