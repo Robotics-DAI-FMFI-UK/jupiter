@@ -3,7 +3,7 @@
  * First, run
  *   roslaunch turtlebot_bringup minimal.launch
  *   roslaunch turtlebot_bringup 3dsensor.launch
- * and then
+ * and then 
  *   rosrun emma depth_map
  *
  * image is 640x480, but left border 40px and right border 49px should be ignored (black or something else...)
@@ -70,9 +70,14 @@ void depthImageCallback(const sensor_msgs::ImageConstPtr& msg)
           sum += value;
         }
         cout << "max:" << max << endl;
-        cout << "avg:" << (sum / msg->data.size() * 2) << endl;
-
-        double q = 65535 / max;
+        if (msg->data.size() > 0)
+          cout << "avg:" << (sum / msg->data.size() * 2) << endl;
+        else
+          cout << "!!! msg->data.size() == 0!!" << endl;
+          
+        double q;
+        if (max != 0) q = 65535 / max;
+        else q = 1.0;
 
         sensor_msgs::Image *msg2 =  new sensor_msgs::Image;
         *msg2 = *msg;
@@ -101,7 +106,7 @@ void depthImageCallback(const sensor_msgs::ImageConstPtr& msg)
     }
     catch (cv_bridge::Exception& e)
     {
-        ROS_ERROR("cv_bridge exception: %s", e.what());
+        ROS_ERROR("cv_bridge excptn: %s", e.what());
     }
 }
 

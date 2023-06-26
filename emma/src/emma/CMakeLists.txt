@@ -39,10 +39,33 @@ rosbuild_add_executable(add_two_ints_client src/learning/add_two_ints_client.cpp
 
 
 
-
 rosbuild_add_executable(arm_test src/learning/arm_to_xyz.cpp src/learning/jupiter_arm_kinematics.cpp)
-target_link_libraries(arm_test ${catkin_LIBRARIES})
 rosbuild_add_executable(move_arm src/learning/move_arm.cpp)
 rosbuild_add_executable(to_obstacle src/learning/to_obstacle.cpp)
 rosbuild_add_executable(follow_me src/follow_me/follow_me.cpp)
 
+find_package(OpenCV)
+
+find_package(catkin REQUIRED COMPONENTS
+  cv_bridge
+  roscpp
+  image_transport
+  OpenCV
+)
+
+include_directories(include ${catkin_INCLUDE_DIRS} ${OpenCV_INCLUDE_DIRS})
+rosbuild_add_executable(depth_map src/depth_map.cpp)
+rosbuild_add_executable(save_depth src/save_depth.cpp)
+rosbuild_add_executable(find_cube src/find_cube/find_cube.cpp src/find_cube/find_brick.cpp)
+rosbuild_add_executable(catch_ball src/catch_ball/catch_ball.cpp src/catch_ball/find_brick.cpp src/catch_ball/arm_to_xyz.cpp src/catch_ball/camera_to_xyz.cpp src/catch_ball/jupiter_arm_kinematics.cpp src/catch_ball/camera_to_arm.cpp)
+
+target_link_libraries(arm_test ${catkin_LIBRARIES})
+target_link_libraries(depth_map ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(save_depth ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(find_cube ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+target_link_libraries(catch_ball ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
+
+message(STATUS "OpenCV library status:")
+message(STATUS "    version: ${OpenCV_VERSION}")
+message(STATUS "    libraries: ${OpenCV_LIBRARIES}")
+message(STATUS "    include path: ${OpenCV_INCLUDE_DIRS}")

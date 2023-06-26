@@ -1,0 +1,16 @@
+measuring camera field view
+
+distance to wall: 77.8cm
+width:  96.2
+height:  71 cm
+
+camera field view vertical rho = 2 * arctg 35.5/77.8   = 49,05 deg
+camera field view horisontal nu = 2 * arctg 48.1/77.8  = 63,45 deg
+
+datasheet values:
+
+rho = 49.5 deg
+nu = 60 deg
+
+diagonal = 73 deg
+
