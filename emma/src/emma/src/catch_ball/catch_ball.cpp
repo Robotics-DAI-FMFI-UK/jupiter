@@ -91,15 +91,10 @@ void rgbImageCallback(const sensor_msgs::ImageConstPtr& msg)
 {
     try
     { 
-		//cout << "RGB: ";
-		//cout << "w:" << msg->width << endl;
-        //cout << "h:" << msg->height << endl;
         sirka = msg->width;
         vyska = msg->height;
         
-        // Prevod z ROS formátu na OpenCV formát
         cv::Mat img = cv_bridge::toCvShare(msg, "bgr8")->image;
-        //printf("call find_cube()\n");
         find_cube(img);
         cv::imshow("rgb", img);
         int k = cv::waitKey(1);
@@ -118,7 +113,6 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "depth_map_node");
     ros::NodeHandle nh;
 
-    // Prihlásenie na odber obrazového topicu
     ros::Subscriber sub = nh.subscribe<sensor_msgs::Image>("/camera/rgb/image_raw", 1, rgbImageCallback);
 
     init_move_arm_to_xyz(nh);
