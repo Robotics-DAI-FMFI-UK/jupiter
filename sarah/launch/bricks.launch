@@ -4,14 +4,11 @@
   	<!-- Laserscan launch -->
 	<include file="$(find rplidar_ros)/launch/rplidar.launch"/>
 	<!-- Arm launch -->
-	<!--<include file="$(find rchomeedu_arm)/launch/arm.launch"/>-->
+	<include file="$(find rchomeedu_arm)/launch/arm.launch"/>
 	<!-- mapping -->
-	<include file="$(find turtlebot_navigation)/launch/gmapping_demo.launch"/>
         <include file="$(find turtlebot_teleop)/launch/logitech.launch"/>	
-<!-- rviz -->
+        <!-- rviz -->
 	<include file="$(find turtlebot_rviz_launchers)/launch/view_navigation.launch"/>
-	<!-- Obstacle publisher -->
-	<!-- <node name="obstaclePublisher" pkg="matus_showcase" type="detect_obstacles.py"></node>-->
-
-
+	<!-- mapping --> 
+	<include file="$(find turtlebot_navigation)/launch/gmapping_demo.launch"/>
 </launch>

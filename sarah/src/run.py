@@ -33,6 +33,10 @@ class RunBehaviour:
 		
 		self.tf_buffer = tf2_ros.Buffer()
 		self.listener = tf2_ros.TransformListener(self.tf_buffer)
+		#self.fake_joy = rospy.Publisher('/joy', Joy, queue_size = 10)
+		
+		#Turn off cause on by default.
+		#self.toggle_following()
 		
 		self.state_in_prog = 0
 		#B button
@@ -64,15 +68,15 @@ class RunBehaviour:
 			self.start_pose = [transform.transform.translation.x, transform.transform.translation.y]
 			rospy.loginfo(self.start_pose)
 			
-			NodeManager.start_following()
+			#self.toggle_following()
 			self.state_in_prog += 1
 		
-		if self.state_in_prog == 1:
-			NodeManager.stop_following()
-			# Extend arm for grab
+		elif self.state_in_prog == 1:
+			# self.toggle_following()
+			NodeManager.start_script("bring_front")
 			self.state_in_prog += 1
 		
-		if self.state_in_prog == 2:
+		elif self.state_in_prog == 2:
 			# Store coordinates as end
 			# Grab and put on body
 			# Drive to start
@@ -80,24 +84,33 @@ class RunBehaviour:
 			# Drive to end
 			# Follow
 			self.state_in_prog = 1
+			
+	def toggle_following(self):	
+		# Figured, that the following node has a switch implemented that listens 
+		# To joystick 5 for turning following on/off, which I take use off.
+		joy_msg = Joy()
+		
+		joy_msg.axes = [0.0] * 6
+		
+		joy_msg.buttons = [0] * 12
+		
+		joy_msg.buttons[5] = 1
+		
+		self.fake_joy.publish(joy_msg)
+		
+		rospy.loginfo("Toggled following")
+		
 		
 class RosNodeManager:
 	
 	def __init__(self):
-		self.following = None
-		
-	def start_following(self):
-		if self.following is None:
-			command = ['roslaunch', 'turtlebot_follower', 'follower.launch']
-			self.following = subprocess.Popen(command) 	
-			rospy.loginfo("Now following")
+		self.process = None
 	
-	def stop_following(self):
-		if self.following is not None:
-			self.following.terminate()
-			self.following.wait()
-			self.following = None
-			rospy.loginfo("Stopped following")
+	def start_script(self, script):
+		path = "~/jupiter/sarah/src/" + script + ".sh"
+		process = subprocess.Popen(path, shell=True)
+		process.wait()
+		rospy.loginfo(script + " finished executing.")
 
 if __name__ == '__main__':
 	NodeManager = RosNodeManager()
