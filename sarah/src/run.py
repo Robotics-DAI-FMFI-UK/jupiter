@@ -14,6 +14,7 @@ import time
 from sensor_msgs.msg import Joy
 import tf2_ros
 import tf2_geometry_msgs
+import subprocess
 
 time.sleep(2)
 Robot = None
@@ -93,9 +94,9 @@ class RosNodeManager:
 	
 	def stop_following(self):
 		if self.following is not None:
-			self.process.terminate()
-			self.process.wait()
-			self.process = None
+			self.following.terminate()
+			self.following.wait()
+			self.following = None
 			rospy.loginfo("Stopped following")
 
 if __name__ == '__main__':
