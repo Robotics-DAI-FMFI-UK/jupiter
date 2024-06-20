@@ -15,6 +15,9 @@ from sensor_msgs.msg import Joy
 import tf2_ros
 import tf2_geometry_msgs
 import subprocess
+from move_base_msgs.msg import MoveBaseAction, MoveBaseGoal
+import actionlib
+from geometry_msgs.msg import PoseStamped, Quaternion
 
 time.sleep(2)
 Robot = None
@@ -43,6 +46,7 @@ class RunBehaviour:
 		self.BUTTON_INDEX = 2
 		self.prev_state = 0
 		self.start_pose = None
+		self.end_pose = None
 		
 		sub = rospy.Subscriber('joy', Joy, self.callback)
 		
@@ -65,7 +69,7 @@ class RunBehaviour:
 		#State machine
 		if self.state_in_prog == 0:
 			transform = self.tf_buffer.lookup_transform("map", "base_link", rospy.Time())
-			self.start_pose = [transform.transform.translation.x, transform.transform.translation.y]
+			self.start_pose = transform.transform
 			rospy.loginfo(self.start_pose)
 			
 			#self.toggle_following()
@@ -77,13 +81,32 @@ class RunBehaviour:
 			self.state_in_prog += 1
 		
 		elif self.state_in_prog == 2:
-			# Store coordinates as end
-			# Grab and put on body
-			# Drive to start
-			# Extend and drop
-			# Drive to end
-			# Follow
+			transform = self.tf_buffer.lookup_transform("map", "base_link", rospy.Time())
+			self.end_pose = transform.transform
+			NodeManager.start_script("take")
+			NodeManager.start_script("park")
+			self.send_goal(self.start_pose)
+			NodeManager.start_script("put")
+			self.send_goal(self.end_pose)
 			self.state_in_prog = 1
+			
+	def send_goal(self, pose):
+		client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+		client.wait_for_server()
+		
+		goal = MoveBaseGoal()
+		goal.target_pose.header.frame_id = "map"
+		goal.target_pose.header.stamp = rospy.Time.now()
+		
+		goal.target_pose.pose.position.x = pose.translation.x
+		goal.target_pose.pose.position.y = pose.translation.y
+		
+		goal.target_pose.pose.orientation = Quaternion(pose.rotation.x, pose.rotation.y, pose.rotation.z, pose.rotation.w)
+		
+		client.send_goal(goal)
+		client.wait_for_result()
+		
+		return client.get_result()
 			
 	def toggle_following(self):	
 		# Figured, that the following node has a switch implemented that listens 
